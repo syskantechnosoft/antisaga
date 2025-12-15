@@ -23,6 +23,14 @@ spring:
           uri: lb://order-service
           predicates:
             - Path=/order/**
+        - id: payment-service
+          uri: lb://payment-service
+          predicates:
+            - Path=/payment/**
+        - id: inventory-service
+          uri: lb://inventory-service
+          predicates:
+            - Path=/inventory/**
         - id: openapi
           uri: lb://api-gateway
           predicates:
@@ -62,4 +70,3 @@ springdoc:
   api-docs:
     enabled: true
     path: /v3/api-docs
-
