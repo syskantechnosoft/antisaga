@@ -2,6 +2,7 @@ package com.antisaga.user.controller;
 
 import com.antisaga.user.entity.User;
 import com.antisaga.user.repository.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,10 @@ public class AuthController {
     private UserRepository userRepository;
 
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
+    public User register(@Valid @RequestBody User user) {
+        if(userRepository.findByUsername(user.getUsername()).isPresent()) {
+             throw new RuntimeException("Username already exists");
+        }
         return userRepository.save(user);
     }
 

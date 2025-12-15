@@ -33,7 +33,7 @@ public class AuthControllerTest {
 
     @Test
     public void testRegister() throws Exception {
-        User user = new User(1, "testuser", "password", "test@email.com", "1234567890");
+        User user = new User(1, "testuser", "password", "test@email.com", "9876543210");
         Mockito.when(userRepository.save(any(User.class))).thenReturn(user);
 
         mockMvc.perform(post("/auth/register")
@@ -45,7 +45,7 @@ public class AuthControllerTest {
 
     @Test
     public void testLoginSuccess() throws Exception {
-        User user = new User(1, "testuser", "password", "test@email.com", "1234567890");
+        User user = new User(1, "testuser", "password", "test@email.com", "9876543210");
         Mockito.when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(user));
 
         mockMvc.perform(post("/auth/login")
