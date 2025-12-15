@@ -10,19 +10,55 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/auth/**, /users/**
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/products/**
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/order/**
+        - id: openapi
+          uri: lb://api-gateway
+          predicates:
+            - Path=/v3/api-docs/**
+          filters:
+            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
       globalcors:
         cors-configurations:
           '[/**]':
             allowedOrigins: "http://localhost:4200"
-            allowedMethods:
-              - GET
-              - POST
-              - PUT
-              - DELETE
-              - OPTIONS
+            allowedMethods: "*"
             allowedHeaders: "*"
+            allowCredentials: true
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: User Service
+        url: /v3/api-docs/user-service
+      - name: Product Service
+        url: /v3/api-docs/product-service
+      - name: Order Service
+        url: /v3/api-docs/order-service
+      - name: Payment Service
+        url: /v3/api-docs/payment-service
+      - name: Inventory Service
+        url: /v3/api-docs/inventory-service
+      - name: Shipping Service
+        url: /v3/api-docs/shipping-service
+      - name: Notification Service
+        url: /v3/api-docs/notification-service
+  api-docs:
+    enabled: true
+    path: /v3/api-docs

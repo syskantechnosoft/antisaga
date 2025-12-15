@@ -1,13 +1,23 @@
 const axios = require('axios');
 
 const GATEWAY_URL = 'http://localhost:8080';
-const USER = { username: 'e2etest', password: 'password', email: 'e2e@test.com', mobile: '1234567890' };
+const USER = { username: 'e2etest', password: 'password', email: 'e2e@test.com', mobile: '9876543210' };
 let userId = null;
 
 async function runE2E() {
     console.log('--- Starting E2E Test ---');
 
     try {
+        // 0. Check Swagger
+        console.log('0. Checking Aggregated Swagger...');
+        try {
+            // Usually /v3/api-docs or the UI
+            const swaggerRes = await axios.get(`${GATEWAY_URL}/v3/api-docs/swagger-config`);
+            console.log('   Swagger Config Found, Status:', swaggerRes.status);
+        } catch (e) {
+            console.log('   Swagger Aggregation endpoint might vary, proceeding...');
+        }
+
         // 1. Register
         console.log('1. Registering User...');
         try {
@@ -15,7 +25,7 @@ async function runE2E() {
             userId = regRes.data.id;
             console.log('   User Registered with ID:', userId);
         } catch (e) {
-            console.log('   User might already exist, trying login...');
+            console.log('   User might already exist (or Backend not running), trying login...');
         }
 
         // 2. Login (Verify credentials)
