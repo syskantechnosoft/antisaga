@@ -1,0 +1,38 @@
+<div class="order-container">
+  <div class="order-card">
+    <h2>Place Order <br><small style="font-size: 0.5em; opacity: 0.7;">(SAGA Pattern)</small></h2>
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="userId">User ID</label>
+        <input type="number" id="userId" [(ngModel)]="orderData.userId" name="userId" placeholder="Enter User ID"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label for="productId">Product ID</label>
+        <input type="number" id="productId" [(ngModel)]="orderData.productId" name="productId"
+          placeholder="Enter Product ID" required>
+      </div>
+
+      <div class="form-group">
+        <label for="quantity">Quantity</label>
+        <input type="number" id="quantity" [(ngModel)]="orderData.quantity" name="quantity" placeholder="Enter Quantity"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label for="totalAmount">Total Amount ($)</label>
+        <input type="number" id="totalAmount" [(ngModel)]="orderData.totalAmount" name="totalAmount"
+          placeholder="Enter Total Amount" required>
+      </div>
+
+      <button type="submit" class="btn-submit">Detailed Order</button>
+    </form>
+
+    <div *ngIf="message" class="message-box">
+      <h3>{{ message }}</h3>
+      <pre *ngIf="response">{{ response | json }}</pre>
+    </div>
+  </div>
+</div>

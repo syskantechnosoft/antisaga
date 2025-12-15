@@ -1,0 +1,53 @@
+# Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# VS Code
+.vscode/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Spring Boot
+.mvn/
+mvnw
+mvnw.cmd
+help.md
+
+# Logs
+*.log
+logs/
+
+# Mac
+.DS_Store
+
+# Frontend - Node/Angular
+node_modules/
+dist/
+.angular/
+.sass-cache/
+connect.lock
+coverage/
+libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+typings/
+
+# OS
+Thumbs.db
