@@ -8,16 +8,6 @@ async function runE2E() {
     console.log('--- Starting E2E Test ---');
 
     try {
-        // 0. Check Swagger
-        console.log('0. Checking Aggregated Swagger...');
-        try {
-            // Usually /v3/api-docs or the UI
-            const swaggerRes = await axios.get(`${GATEWAY_URL}/v3/api-docs/swagger-config`);
-            console.log('   Swagger Config Found, Status:', swaggerRes.status);
-        } catch (e) {
-            console.log('   Swagger Aggregation endpoint might vary, proceeding...');
-        }
-
         // 1. Register
         console.log('1. Registering User...');
         try {
@@ -28,12 +18,12 @@ async function runE2E() {
             console.log('   User might already exist (or Backend not running), trying login...');
         }
 
-        // 2. Login (Verify credentials)
+        // 2. Login (Verify credentials - NOW EMAIL/PASS)
         console.log('2. Logging in...');
-        const loginRes = await axios.post(`${GATEWAY_URL}/auth/login`, { username: USER.username, password: USER.password });
+        const loginRes = await axios.post(`${GATEWAY_URL}/auth/login`, { email: USER.email, password: USER.password });
         if (loginRes.data && loginRes.data.username === USER.username) {
             console.log('   Login Successful');
-            userId = loginRes.data.id; // Ensure we have ID
+            userId = loginRes.data.id;
         } else {
             throw new Error('Login failed');
         }
@@ -42,7 +32,7 @@ async function runE2E() {
         console.log('3. Creating Order...');
         const orderPayload = {
             userId: userId,
-            items: [{ productId: 1, quantity: 1, price: 100 }], // Assume Product 1 exists
+            items: [{ productId: 1, quantity: 1, price: 100 }],
             totalAmount: 100
         };
         const orderRes = await axios.post(`${GATEWAY_URL}/order/create`, orderPayload);

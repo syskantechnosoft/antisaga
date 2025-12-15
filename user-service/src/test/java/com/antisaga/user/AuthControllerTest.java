@@ -1,6 +1,7 @@
 package com.antisaga.user;
 
 import com.antisaga.user.controller.AuthController;
+import com.antisaga.user.dto.LoginRequest;
 import com.antisaga.user.entity.User;
 import com.antisaga.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,11 +47,16 @@ public class AuthControllerTest {
     @Test
     public void testLoginSuccess() throws Exception {
         User user = new User(1, "testuser", "password", "test@email.com", "9876543210");
-        Mockito.when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(user));
+        // Mock finding by EMAIL
+        Mockito.when(userRepository.findByEmail("test@email.com")).thenReturn(Optional.of(user));
+
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setEmail("test@email.com");
+        loginRequest.setPassword("password");
 
         mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(user)))
+                .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
     }

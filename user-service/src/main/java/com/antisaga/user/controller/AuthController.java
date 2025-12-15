@@ -1,5 +1,6 @@
 package com.antisaga.user.controller;
 
+import com.antisaga.user.dto.LoginRequest;
 import com.antisaga.user.entity.User;
 import com.antisaga.user.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -18,13 +19,17 @@ public class AuthController {
         if(userRepository.findByUsername(user.getUsername()).isPresent()) {
              throw new RuntimeException("Username already exists");
         }
+        // Also check email
+        if(userRepository.existsByEmail(user.getEmail())) {
+             throw new RuntimeException("Email already exists");
+        }
         return userRepository.save(user);
     }
 
     @PostMapping("/login")
-    public User login(@RequestBody User user) {
-        return userRepository.findByUsername(user.getUsername())
-                .filter(u -> u.getPassword().equals(user.getPassword()))
+    public User login(@Valid @RequestBody LoginRequest loginRequest) {
+        return userRepository.findByEmail(loginRequest.getEmail())
+                .filter(u -> u.getPassword().equals(loginRequest.getPassword()))
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
     }
 }
