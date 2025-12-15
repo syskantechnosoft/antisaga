@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CartService } from '../cart.service';
+import { ToastService } from '../toast.service';
 
 @Component({
   selector: 'app-product-list',
@@ -46,7 +47,11 @@ export class ProductList implements OnInit {
   searchTerm = '';
   category = '';
 
-  constructor(private http: HttpClient, private cartService: CartService) { }
+  constructor(
+    private http: HttpClient,
+    private cartService: CartService,
+    private toast: ToastService
+  ) { }
 
   ngOnInit() {
     this.search();
@@ -62,6 +67,6 @@ export class ProductList implements OnInit {
 
   addToCart(product: any) {
     this.cartService.addToCart(product);
-    alert('Added to Cart!');
+    this.toast.show('Added to Cart!', 'success');
   }
 }

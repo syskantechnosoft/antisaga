@@ -1,5 +1,5 @@
 server:
-  port: 8084
+  port: ${PORT:8080}
 
 spring:
   application:
@@ -17,9 +17,10 @@ spring:
     initial-balance: 1000 # Just a comment
   rabbitmq:
     host: rabbitmq
-    port: 5672
+    port: ${PORT:8080}
 
 eureka:
   client:
     service-url:
       defaultZone: http://discovery-server:8761/eureka/
+

@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 spring:
   application:
@@ -62,3 +62,4 @@ springdoc:
   api-docs:
     enabled: true
     path: /v3/api-docs
+

@@ -1,5 +1,5 @@
 server:
-  port: 8085
+  port: ${PORT:8080}
 
 spring:
   application:
@@ -15,9 +15,10 @@ spring:
     defer-datasource-initialization: true
   rabbitmq:
     host: rabbitmq
-    port: 5672
+    port: ${PORT:8080}
 
 eureka:
   client:
     service-url:
       defaultZone: http://discovery-server:8761/eureka/
+

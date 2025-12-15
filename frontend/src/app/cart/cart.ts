@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../cart.service';
 import { HttpClient } from '@angular/common/http';
+import { ToastService } from '../toast.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -33,7 +35,12 @@ export class Cart implements OnInit {
   items: any[] = [];
   total = 0;
 
-  constructor(private cartService: CartService, private http: HttpClient) { }
+  constructor(
+    private cartService: CartService,
+    private http: HttpClient,
+    private toast: ToastService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     this.refresh();
@@ -47,15 +54,15 @@ export class Cart implements OnInit {
   checkout() {
     const userStr = localStorage.getItem('user');
     if (!userStr) {
-      alert('Please login to checkout');
+      this.toast.show('Please login to checkout', 'error');
+      // Redirect to login if needed, or just show toast
+      this.router.navigate(['/login']);
       return;
     }
     const user = JSON.parse(userStr);
 
-    // Construct OrderRequestDTO
-    // userId, items: [{productId, quantity, price}], totalAmount
     const orderRequest = {
-      userId: user.id || 1, // Fallback to 1 if user object incomplete (demo)
+      userId: user.id || 1,
       items: this.items.map(i => ({ productId: i.id, quantity: i.quantity, price: i.price })),
       totalAmount: this.total
     };
@@ -63,13 +70,14 @@ export class Cart implements OnInit {
     this.http.post('http://localhost:8080/order/create', orderRequest).subscribe({
       next: (res) => {
         console.log(res);
-        alert('Order Placed Successfully! SAGA sequence initiated.');
+        this.toast.show('Order Placed Successfully! SAGA sequence initiated.', 'success');
         this.cartService.clearCart();
         this.refresh();
       },
       error: (err) => {
         console.error(err);
-        alert('Order Failed');
+        // ErrorInterceptor will handle generic errors, but we can be specific
+        this.toast.show('Order Failed', 'error');
       }
     });
   }

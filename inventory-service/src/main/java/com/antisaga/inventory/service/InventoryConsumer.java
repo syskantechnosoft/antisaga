@@ -30,7 +30,7 @@ public class InventoryConsumer {
         if (PaymentStatus.PAYMENT_COMPLETED.equals(paymentEvent.getPaymentStatus())) {
              processInventory(paymentEvent);
         } else {
-             // If payment failed, we do nothing usually
+             // If payment failed, we do nothing usually or handle cleanup
         }
     }
 
@@ -41,7 +41,13 @@ public class InventoryConsumer {
         // Check availability
         for (OrderItemDTO item : items) {
              Inventory inventory = inventoryRepository.findById(item.getProductId()).orElse(null);
-             if (inventory == null || inventory.getAvailableAmount() < item.getQuantity()) {
+             if (inventory == null) {
+                 // Auto-stock missing products for demo/testing
+                 inventory = new Inventory(item.getProductId(), 100);
+                 inventoryRepository.save(inventory);
+             }
+             
+             if (inventory.getAvailableAmount() < item.getQuantity()) {
                  allAvailable = false;
                  break;
              }
@@ -52,7 +58,7 @@ public class InventoryConsumer {
         if (allAvailable) {
             // Deduct inventory
             for (OrderItemDTO item : items) {
-                Inventory inventory = inventoryRepository.findById(item.getProductId()).orElseThrow();
+                Inventory inventory = inventoryRepository.findById(item.getProductId()).get();
                 inventory.setAvailableAmount(inventory.getAvailableAmount() - item.getQuantity());
                 inventoryRepository.save(inventory);
             }

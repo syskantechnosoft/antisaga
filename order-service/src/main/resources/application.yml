@@ -1,5 +1,5 @@
 server:
-  port: 8083
+  port: ${PORT:8080}
 
 spring:
   application:
@@ -17,7 +17,7 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
   rabbitmq:
     host: rabbitmq
-    port: 5672
+    port: ${PORT:8080}
     username: guest
     password: guest
 
@@ -27,3 +27,4 @@ eureka:
       defaultZone: http://discovery-server:8761/eureka/
 
 # Note: Using hostnames 'localhost', 'rabbitmq', 'discovery-server'. These must be defined in docker-compose.
+
