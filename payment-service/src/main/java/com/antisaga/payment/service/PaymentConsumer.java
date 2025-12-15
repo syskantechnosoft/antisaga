@@ -28,16 +28,19 @@ public class PaymentConsumer {
         if (OrderStatus.ORDER_CREATED.equals(orderEvent.getOrderStatus())) {
              processPayment(orderEvent);
         } else {
-             // Handle cancellation if needed (Compensating Transaction: Refund)
-             // e.g. if OrderStatus.ORDER_CANCELLED or INVENTORY_FAILED
+             // Handle cancellation if needed
+             // e.g., if OrderStatus.ORDER_CANCELLED
         }
     }
 
     private void processPayment(OrderEvent orderEvent) {
-        UserBalance userBalance = userBalanceRepository.findById(orderEvent.getOrderRequest().getUserId()).orElse(null);
+        Integer userId = orderEvent.getOrderRequest().getUserId();
+        // Demo Hack: Create balance for new users automatically
+        UserBalance userBalance = userBalanceRepository.findById(userId).orElse(new UserBalance(userId, 5000.0));
+        
         PaymentStatus paymentStatus = PaymentStatus.PAYMENT_FAILED;
         
-        if (userBalance != null && userBalance.getPrice() >= orderEvent.getOrderRequest().getTotalAmount()) {
+        if (userBalance.getPrice() >= orderEvent.getOrderRequest().getTotalAmount()) {
             userBalance.setPrice(userBalance.getPrice() - orderEvent.getOrderRequest().getTotalAmount());
             userBalanceRepository.save(userBalance);
             paymentStatus = PaymentStatus.PAYMENT_COMPLETED;
